@@ -7,6 +7,5 @@ export const getJobs = async (limit = 10, offset = 0) => {
             },
             body: JSON.stringify({limit, offset})
         })
-    const data = await res.json()
-    return data?.['jdList']
+    return await res.json()
 }

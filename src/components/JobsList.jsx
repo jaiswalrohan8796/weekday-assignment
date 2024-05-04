@@ -5,7 +5,7 @@ export const JobsList = ({jobs, loading}) => {
     return <div className={"w-full flex flex-col justify-center items-center gap-6"}>
         <div className={"w-full flex flex-wrap justify-around items-center gap-8"}>
             {jobs?.map((job) => {
-                return <JobCard key={job?.id} job={job} />
+                return <div key={job?.jdUid}><JobCard job={job} /></div>
             })}
         </div>
        <div>

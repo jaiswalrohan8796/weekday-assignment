@@ -1,23 +1,72 @@
 import {HourglassIcon} from "./shared/icons/icons";
 
-export const JobCard = () => {
+const getCurrencySymbol = (currency) => {
+    switch (currency) {
+        case 'USD':
+            return '$'
+        case 'INR':
+            return '₹'
+        default:
+            return ''
+    }
+}
+
+const salaryString = (minSalary, maxSalary, currency) => {
+    if(minSalary || maxSalary) {
+        let currSymbol = getCurrencySymbol(currency)
+        let arr = []
+        if(minSalary) {
+            arr.push(`${minSalary}`)
+        }
+        if(maxSalary) {
+            arr.push(`${maxSalary}`)
+        }
+        return currSymbol + " " + arr.join(' - ')
+    } else {
+        return 'Undisclosed'
+    }
+}
+
+const experienceString = (minExp, maxExp) => {
+    if(minExp || maxExp) {
+        let arr = []
+        if(minExp) {
+            arr.push(`${minExp}`)
+        }
+        if(maxExp) {
+            arr.push(`${maxExp}`)
+        }
+        return arr.join(' - ') + ' years'
+    } else {
+        return 'Not specified'
+    }
+}
+
+export const JobCard = ({job}) => {
+
+    const companyName = job?.companyName ?? ""
+    const companyURL = job?.logoUrl ?? ""
+    const jobRole = job?.jobRole ?? ""
+    const location = job?.location ?? ""
+    const salary = salaryString(job?.minJdSalary, job?.maxJdSalary, job?.salaryCurrencyCode)
+    const experience = experienceString(job?.minExp, job?.maxExp)
+
     return <div className={"w-[360px] h-[600px] flex flex-col justify-start items-center gap-1 p-4 rounded-xl shadow-all-side hover:scale-[101%]"}>
         <div className={"w-full h-[5%] flex justify-start items-center"}>
             <div className={"flex justify-start items-center gap-1 border rounded-md shadow-all-side p-1"}>
-                <span><HourglassIcon /></span>
-                <p className={"text-[10px] font-light"}>{"Posted 13 days ago"}</p>
+                <p className={"text-[10px] font-light"}>{"New"}</p>
             </div>
         </div>
         <div className={"w-full h-[15%] flex flex-row justify-start items-center gap-2"}>
-            <div className={"w-[20%]"}><img src={"https://picsum.photos/400"} alt={""} className={"w-full h-full object-contain"} /></div>
+            <div className={"w-[20%]"}><img src={companyURL} alt={""} className={"w-full h-full object-contain"} /></div>
             <div className={"w-[80%] flex flex-col justify-center items-start gap-1"}>
-                <p className={"text-slate-500 text-sm font-medium"}>{"Fitpage"}</p>
-                <p className={"font-light"}>{"Full Stack Developer"}</p>
-                <p className={"text-xs font-light"}>{"Mumbai"}</p>
+                <p className={"text-slate-500 text-sm font-medium"}>{companyName}</p>
+                <p className={"font-light capitalize"}>{jobRole}</p>
+                <p className={"text-xs font-light"}>{location}</p>
             </div>
         </div>
         <div className={"w-full h-[5%] flex justify-start items-center"}>
-            <p className={"text-slate-500 text-sm font-medium"}>{"Estimated Salary:"} {"$ 10 - 12 LPA"} {"✅"}</p>
+            <p className={"text-slate-500 text-sm font-medium"}>{"Estimated Salary:"} {salary} {"✅"}</p>
         </div>
         <div className={"relative w-full h-[50%] flex flex-col justify-start items-start text-sm"}>
             <div className={"z-10 absolute bottom-0 left-0 h-[30%] w-full flex justify-center items-end bg-gradient-to-t from-white from-50% to-90%"}>
@@ -30,11 +79,11 @@ export const JobCard = () => {
         </div>
         <div className={"w-full h-[10%] flex flex-col justify-center items-start text-sm"}>
             <p className={"text-slate-500 font-medium"}>{"Minimum Experience"}</p>
-            <p className={""}>{"2 years"}</p>
+            <p className={""}>{experience}</p>
         </div>
         <div className={"w-full h-[15%] flex flex-col justify-center items-center gap-2"}>
-            <button className={"w-full h-[50%] flex justify-center items-center rounded-md font-medium bg-[#54EFC4] cursor-pointer"}>Easy Apply</button>
-            <button className={"w-full h-[50%] flex justify-center items-center rounded-md text-white text-sm bg-[#4943DA] cursor-pointer"}>Unlock Referral</button>
+            <button className={"w-full h-[50%] flex justify-center items-center rounded-md font-medium bg-[#54EFC4] active:bg-[#2fd8a9] cursor-pointer"}>Easy Apply</button>
+            <button className={"w-full h-[50%] flex justify-center items-center rounded-md text-white text-sm bg-[#4943DA] active:bg-[#413bbf] cursor-pointer"}>Unlock Referral</button>
         </div>
     </div>
 }
