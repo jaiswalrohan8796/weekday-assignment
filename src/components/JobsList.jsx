@@ -7,6 +7,7 @@ export const JobsList = ({jobs, loading}) => {
             {jobs?.map((job) => {
                 return <div key={job?.jdUid}><JobCard job={job} /></div>
             })}
+            {jobs?.length === 0 ? <div><p className={"text-sm font-light"}>No jobs matched</p></div> : null}
         </div>
        <div>
            {loading ? <div className="flex justify-center items-center animate-spin">

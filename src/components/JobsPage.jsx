@@ -1,7 +1,7 @@
 import {Header} from "./Header";
 import {Filters} from "./Filters";
 import {JobsList} from "./JobsList";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {getJobs} from "../services/jobs";
 
 export const JobsPage = () => {
@@ -11,6 +11,11 @@ export const JobsPage = () => {
     const [loading, setLoading] = useState(false)
     const [offset, setOffset] = useState(0)
     const [total, setTotal] = useState(0)
+
+    const [role, setRole] = useState([])
+    const [exp, setExp] = useState(0)
+    const [pay, setPay] = useState(0)
+    const [company, setCompany] = useState('')
 
     const fetchJobs = async(limit, offset) => {
         setLoading(true);
@@ -49,9 +54,41 @@ export const JobsPage = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [offset, total]);
 
+    const filteredJobs = useMemo(() => {
+        let res = [...jobs]
+        //role
+        if(role.length !== 0) {
+            res = res.filter((job) => {
+                return role.includes(job?.jobRole)
+            })
+        }
+        //exp
+        if(exp !== 0) {
+            res = res.filter((job) => {
+                if(!job?.minExp) return true
+                return (exp <= job?.minExp);
+
+            })
+        }
+        //pay
+        if(pay !== 0) {
+            res = res.filter((job) => {
+                if(!job?.minJdSalary) return true
+                return (pay <= job?.minJdSalary);
+            })
+        }
+        // company
+        if(company !== '') {
+            res = res.filter((job) => {
+                return job?.companyName?.includes(company)
+            })
+        }
+        return res
+    }, [jobs, role, exp, pay, company])
+
     return <div className={'w-full flex flex-col justify-start items-center gap-6'}>
         <Header />
-        <Filters />
-        <JobsList jobs={jobs} loading={loading} />
+        <Filters role={role} setRole={setRole} exp={exp} setExp={setExp} pay={pay} setPay={setPay} company={company} setCompany={setCompany} />
+        <JobsList jobs={filteredJobs} loading={loading} />
     </div>
 }
